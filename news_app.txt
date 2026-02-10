@@ -1,0 +1,23 @@
+import win32com.client
+import requests
+
+speaker = win32com.client.Dispatch("SAPI.SpVoice")
+
+
+def news(query):
+    about = ' '.join(query.split('about')[1:]).strip()
+    print(about + " news")
+
+    speaker.speak(f"searching the latest news about {about} sir")
+
+    url = (
+        f"https://newsapi.org/v2/top-headlines"
+        f"?category={about}&country=in"
+        f"&apiKey=4d46f612033e484ea9f4ba943c1a8232"
+    )
+
+    news_data = requests.get(url).json()
+
+    for i in range(len(news_data["articles"])):
+        speaker.speak(news_data["articles"][i]["title"])
+        print(i + 1, news_data["articles"][i]["title"])
